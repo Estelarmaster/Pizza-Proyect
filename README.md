@@ -5,6 +5,7 @@ A complete pizza delivery application built with Angular 20, TypeScript, and Tai
 ## ✨ Features
 
 ### 🏠 Core Application
+
 - **Beautiful Landing Page** - Welcome screen with animated pizza graphics matching Figma design
 - **User Authentication** - Login and registration with validation
 - **Pizza Menu** - Browse pizzas with categories, search, and filtering
@@ -15,12 +16,14 @@ A complete pizza delivery application built with Angular 20, TypeScript, and Tai
 - **User Profile** - Account management and settings
 
 ### 👨‍💼 Admin Dashboard
+
 - **Pizza Management** - Full CRUD operations (Create, Read, Update, Delete)
 - **Order Management** - View and update order statuses
 - **Statistics** - Dashboard with key metrics and analytics
 - **Category Management** - Organize pizzas by categories
 
 ### 🎨 Design & UX
+
 - **Pixel-Perfect Implementation** - Matches Figma designs exactly
 - **Responsive Design** - Works seamlessly on mobile, tablet, and desktop
 - **Spanish Language Support** - Full Spanish interface as per design
@@ -69,6 +72,7 @@ src/
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js (v18+)
 - npm or yarn
 - Angular CLI (v17+)
@@ -76,17 +80,20 @@ src/
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd pizza-delivery-app
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Start the development server**
+
    ```bash
    npm start
    # or
@@ -109,24 +116,28 @@ For testing purposes, use these demo credentials:
 ## 📱 Key Pages & Features
 
 ### 🏠 Home Page (`/`)
+
 - Animated pizza splash screen (3 seconds)
 - Hero section with gradient background
 - Feature highlights
 - Call-to-action buttons
 
 ### 🔐 Authentication (`/login`, `/register`)
+
 - Beautiful forms matching Figma design
 - Form validation and error handling
 - Demo credentials for testing
 - Automatic redirection after login
 
 ### 🍕 Menu (`/menu`)
+
 - Search functionality
 - Category filtering (All, Vegetarian, Classic, Meat, Breakfast)
 - Pizza cards with images, prices, and quick add buttons
 - "Add to Cart" notifications
 
 ### 📄 Pizza Details (`/pizza/:id`)
+
 - Large circular pizza image
 - Size selection (S, M, L)
 - Ingredients display
@@ -134,18 +145,21 @@ For testing purposes, use these demo credentials:
 - Add to cart functionality
 
 ### 🛒 Shopping Cart (`/cart`)
+
 - Item management (add/remove/update quantities)
 - Price calculations (subtotal, taxes, delivery)
 - Checkout button (requires authentication)
 - Empty cart state
 
 ### 💳 Checkout (`/checkout`)
+
 - Address selection (Home/Office)
 - Payment method selection (Online/Cash)
 - Order summary
 - Place order functionality
 
 ### 📊 Admin Dashboard (`/admin`)
+
 - **Pizza Management**: CRUD operations with form validation
 - **Order Management**: Status updates and order tracking
 - **Statistics**: Revenue, orders, and pizza counts
@@ -154,17 +168,20 @@ For testing purposes, use these demo credentials:
 ## 🎨 Design System
 
 ### Colors
+
 - **Primary**: Red shades (`#dc2626`, `#b91c1c`)
 - **Secondary**: Amber/Orange shades (`#f59e0b`, `#ea580c`)
 - **Background**: Cream/Beige tones (`#FFF8E1`, `#FBDAB8`)
 - **Text**: Brown (`#7B4B28`) and standard grays
 
 ### Typography
+
 - **Headers**: Lobster (serif) for branding
 - **Body**: Poppins (sans-serif) for readability
 - **Weights**: 400, 500, 600, 700
 
 ### Components
+
 - Rounded corners (`rounded-lg`, `rounded-xl`)
 - Soft shadows for cards
 - Hover animations and transitions
@@ -196,6 +213,7 @@ Using Angular Signals for reactive state management:
 ## 🧭 Navigation
 
 Hash-based routing for compatibility:
+
 - Automatic redirects for unauthenticated users
 - Admin role verification
 - Breadcrumb navigation
@@ -206,6 +224,7 @@ Hash-based routing for compatibility:
 The app is configured for easy deployment:
 
 1. **Build for production**
+
    ```bash
    npm run build
    ```
@@ -230,6 +249,7 @@ This project is built for demonstration purposes. Please check with the appropri
 ## 🍕 About
 
 This pizza delivery app showcases modern Angular development practices with a focus on:
+
 - Clean, maintainable code architecture
 - Responsive, accessible design
 - Real-world features and functionality

@@ -1,7 +1,7 @@
 <div class="min-h-screen bg-gray-50">
   <!-- Header - shown conditionally -->
   <app-header *ngIf="showHeader"></app-header>
-  
+
   <!-- Main content -->
   <main [class]="showHeader ? '' : 'min-h-screen'">
     <router-outlet></router-outlet>

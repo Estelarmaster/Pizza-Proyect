@@ -1,11 +1,11 @@
-import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { Component, signal } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { Router, RouterLink } from "@angular/router";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
-  selector: 'app-login',
+  selector: "app-login",
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   template: `
@@ -101,38 +101,38 @@ import { AuthService } from '../../services/auth.service';
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class LoginComponent {
-  email = '';
-  password = '';
+  email = "";
+  password = "";
   isLoading = signal(false);
-  errorMessage = signal('');
+  errorMessage = signal("");
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {}
 
   onLogin() {
     if (!this.email || !this.password) {
-      this.errorMessage.set('Por favor completa todos los campos');
+      this.errorMessage.set("Por favor completa todos los campos");
       return;
     }
 
     this.isLoading.set(true);
-    this.errorMessage.set('');
+    this.errorMessage.set("");
 
     // Simulate API call delay
     setTimeout(() => {
       const success = this.authService.login(this.email, this.password);
-      
+
       if (success) {
-        this.router.navigate(['/menu']);
+        this.router.navigate(["/menu"]);
       } else {
-        this.errorMessage.set('Credenciales incorrectas');
+        this.errorMessage.set("Credenciales incorrectas");
       }
-      
+
       this.isLoading.set(false);
     }, 1000);
   }

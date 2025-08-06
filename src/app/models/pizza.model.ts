@@ -6,14 +6,14 @@ export interface Pizza {
   image: string;
   weight: string;
   ingredients: string[];
-  category: 'vegetarian' | 'classic' | 'meat' | 'breakfast';
+  category: "vegetarian" | "classic" | "meat" | "breakfast";
   available: boolean;
 }
 
 export interface CartItem {
   pizza: Pizza;
   quantity: number;
-  size: 'S' | 'M' | 'L';
+  size: "S" | "M" | "L";
 }
 
 export interface Order {
@@ -24,14 +24,14 @@ export interface Order {
   deliveryFee: number;
   subtotal: number;
   address: DeliveryAddress;
-  paymentMethod: 'cash' | 'online';
-  status: 'pending' | 'confirmed' | 'preparing' | 'delivery' | 'delivered';
+  paymentMethod: "cash" | "online";
+  status: "pending" | "confirmed" | "preparing" | "delivery" | "delivered";
   createdAt: Date;
   userId: string;
 }
 
 export interface DeliveryAddress {
-  type: 'home' | 'office';
+  type: "home" | "office";
   address: string;
   city: string;
   country: string;
