@@ -105,9 +105,10 @@ import { AuthService } from "../../services/auth.service";
 
           <!-- Demo credentials info -->
           <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <p class="text-sm text-blue-800 font-semibold mb-2">Demo Login:</p>
-            <p class="text-xs text-blue-700">Email: james@example.com</p>
-            <p class="text-xs text-blue-700">Password: cualquier contraseña</p>
+            <p class="text-sm text-blue-800 font-semibold mb-2">🍕 Demo Login (Admin):</p>
+            <p class="text-xs text-blue-700 mb-1">📧 Email: james@example.com</p>
+            <p class="text-xs text-blue-700 mb-2">🔑 Password: cualquier contraseña</p>
+            <p class="text-xs text-blue-600 italic">Con este usuario puedes acceder al panel de administrador para agregar, editar y eliminar pizzas.</p>
           </div>
         </div>
       </div>
