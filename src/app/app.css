@@ -1,0 +1,104 @@
+/* App-specific styles */
+.app-container {
+  @apply min-h-screen bg-gray-50;
+}
+
+.main-content {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+/* Pizza-themed decorations */
+.pizza-pattern {
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(255, 193, 7, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 87, 34, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(244, 67, 54, 0.1) 0%, transparent 50%);
+}
+
+.hero-gradient {
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 25%, #ffd23f  50%, #ff6b35 75%, #c0392b 100%);
+}
+
+/* Component-specific animations */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.slide-up {
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Custom form styles */
+.form-container {
+  @apply bg-white rounded-2xl shadow-2xl p-8;
+}
+
+.form-field {
+  @apply space-y-2;
+}
+
+.form-label {
+  @apply block text-red-700 font-semibold;
+}
+
+.form-error {
+  @apply text-red-600 text-sm;
+}
+
+/* Button variants */
+.btn-pizza {
+  @apply bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300;
+}
+
+.btn-outline-pizza {
+  @apply border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-bold py-2 px-4 rounded-lg transition-all duration-200;
+}
+
+/* Card hover effects */
+.card-hover {
+  @apply transform transition-all duration-300 hover:scale-105 hover:shadow-xl;
+}
+
+/* Loading states */
+.skeleton {
+  @apply bg-gray-200 animate-pulse rounded;
+}
+
+.skeleton-text {
+  @apply skeleton h-4 mb-2;
+}
+
+.skeleton-avatar {
+  @apply skeleton w-12 h-12 rounded-full;
+}
+
+/* Mobile responsive utilities */
+@media (max-width: 640px) {
+  .mobile-padding {
+    @apply px-4;
+  }
+  
+  .mobile-text {
+    @apply text-sm;
+  }
+}
