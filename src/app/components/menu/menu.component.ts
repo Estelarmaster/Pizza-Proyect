@@ -84,7 +84,7 @@ import { Pizza } from '../../models/pizza.model';
               <div class="bg-gray-800 rounded-lg p-4 mb-4">
                 <h3 class="text-white font-bold text-lg mb-2">{{ pizza.name }}</h3>
                 <p class="text-gray-300 text-sm mb-2">{{ pizza.weight }}</p>
-                <p class="text-yellow-400 font-bold text-lg">${{ pizza.price }}</p>
+                <p class="text-yellow-400 font-bold text-lg">₹{{ pizza.price }}</p>
               </div>
 
               <!-- Action Buttons -->
