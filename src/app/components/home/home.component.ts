@@ -27,18 +27,20 @@ import { AuthService } from "../../services/auth.service";
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                />
                 <!-- Pizza center cheese -->
-                <circle cx="12" cy="12" r="3" fill-opacity="0.7"/>
+                <circle cx="12" cy="12" r="3" fill-opacity="0.7" />
                 <!-- Pepperoni toppings -->
-                <circle cx="8" cy="8" r="1.2"/>
-                <circle cx="16" cy="8" r="1.2"/>
-                <circle cx="8" cy="16" r="1.2"/>
-                <circle cx="16" cy="16" r="1.2"/>
-                <circle cx="10" cy="12" r="1"/>
-                <circle cx="14" cy="12" r="1"/>
-                <circle cx="12" cy="9" r="1"/>
-                <circle cx="12" cy="15" r="1"/>
+                <circle cx="8" cy="8" r="1.2" />
+                <circle cx="16" cy="8" r="1.2" />
+                <circle cx="8" cy="16" r="1.2" />
+                <circle cx="16" cy="16" r="1.2" />
+                <circle cx="10" cy="12" r="1" />
+                <circle cx="14" cy="12" r="1" />
+                <circle cx="12" cy="9" r="1" />
+                <circle cx="12" cy="15" r="1" />
               </svg>
             </div>
             <div
