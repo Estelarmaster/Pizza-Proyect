@@ -16,8 +16,14 @@ import { AuthService } from "../../services/auth.service";
           <div class="absolute -top-16 left-1/2 transform -translate-x-1/2">
             <div class="w-32 h-32 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-lg">
               <div class="w-20 h-20 bg-yellow-300 rounded-full flex items-center justify-center">
+                <!-- Pizza Icon -->
                 <svg class="w-12 h-12 text-red-600" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                  <circle cx="12" cy="12" r="2"/>
+                  <circle cx="8" cy="9" r="1"/>
+                  <circle cx="16" cy="9" r="1"/>
+                  <circle cx="9" cy="15" r="1"/>
+                  <circle cx="15" cy="15" r="1"/>
                 </svg>
               </div>
             </div>
@@ -74,9 +80,14 @@ import { AuthService } from "../../services/auth.service";
             >
               <span *ngIf="!isLoading()">Iniciar Sesión</span>
               <span *ngIf="isLoading()" class="flex items-center justify-center">
-                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <!-- Pizza spinning icon -->
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                  <circle cx="12" cy="12" r="1.5"/>
+                  <circle cx="9" cy="9" r="0.8"/>
+                  <circle cx="15" cy="9" r="0.8"/>
+                  <circle cx="10" cy="15" r="0.8"/>
+                  <circle cx="14" cy="15" r="0.8"/>
                 </svg>
                 Iniciando...
               </span>

@@ -21,14 +21,24 @@ import { AuthService } from "../../services/auth.service";
               class="absolute -top-16 -left-16 w-32 h-32 rounded-full bg-orange-400 opacity-70 animate-pulse"
             ></div>
             <div class="relative z-10 bg-white rounded-full p-8 shadow-2xl">
+              <!-- Large Pizza Icon -->
               <svg
-                class="w-32 h-32 text-orange-500"
+                class="w-32 h-32 text-orange-500 animate-pulse"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-                />
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                <!-- Pizza center cheese -->
+                <circle cx="12" cy="12" r="3" fill-opacity="0.7"/>
+                <!-- Pepperoni toppings -->
+                <circle cx="8" cy="8" r="1.2"/>
+                <circle cx="16" cy="8" r="1.2"/>
+                <circle cx="8" cy="16" r="1.2"/>
+                <circle cx="16" cy="16" r="1.2"/>
+                <circle cx="10" cy="12" r="1"/>
+                <circle cx="14" cy="12" r="1"/>
+                <circle cx="12" cy="9" r="1"/>
+                <circle cx="12" cy="15" r="1"/>
               </svg>
             </div>
             <div
