@@ -6,6 +6,7 @@ import { CartService } from "../../services/cart.service";
 import { OrderService } from "../../services/order.service";
 import { DeliveryAddress } from "../../models/pizza.model";
 import { PaypalService } from "../../services/paypal.service";
+import { CurrencyService } from "../../services/currency.service";
 
 @Component({
   selector: "app-checkout",
@@ -228,7 +229,10 @@ import { PaypalService } from "../../services/paypal.service";
         <div *ngIf="selectedPaymentMethod() === 'online'" class="bg-white rounded-xl p-6">
           <h3 class="text-lg font-bold text-gray-800 mb-3">Pagar con PayPal</h3>
           <div #paypalButtons></div>
-          <p class="text-xs text-gray-500 mt-3">Pago seguro a través de PayPal</p>
+          <p class="text-sm text-gray-700 mt-3">
+            Se cobrará en USD: <span class="font-bold">{{ usdEstimate() | currency:'USD':'symbol':'1.2-2' }}</span>
+          </p>
+          <p class="text-xs text-gray-500">Mostramos COP en la app, pero PayPal no admite COP. Convertimos a USD automáticamente.</p>
         </div>
 
         <!-- Total and Order Button -->
@@ -285,6 +289,7 @@ export class CheckoutComponent {
   selectedAddress = signal<DeliveryAddress | null>(null);
   selectedPaymentMethod = signal<"cash" | "online" | null>(null);
   isPlacingOrder = signal(false);
+  usdEstimate = signal(0);
 
   homeAddress: DeliveryAddress = {
     type: "home",
@@ -308,6 +313,7 @@ export class CheckoutComponent {
     private orderService: OrderService,
     private router: Router,
     private paypal: PaypalService,
+    private currency: CurrencyService,
   ) {
     // Pre-select home address
     this.selectedAddress.set(this.homeAddress);
@@ -322,12 +328,14 @@ export class CheckoutComponent {
 
   private async renderPayPalButtons() {
     try {
-      await this.paypal.loadSdk('COP');
+      await this.paypal.loadSdk('USD');
       const container = this.paypalButtonsRef?.nativeElement;
       if (!container || !window.paypal) return;
       container.innerHTML = '';
 
-      const total = Math.max(0, this.cartService.total());
+      const totalCop = Math.max(0, this.cartService.total());
+      const totalUsd = this.currency.convertCopToUsd(totalCop);
+      this.usdEstimate.set(totalUsd);
       window.paypal.Buttons({
         style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' },
         createOrder: (_data: any, actions: any) => {
@@ -335,8 +343,8 @@ export class CheckoutComponent {
             purchase_units: [
               {
                 amount: {
-                  currency_code: 'COP',
-                  value: String(Math.round(total)),
+                  currency_code: 'USD',
+                  value: String(totalUsd.toFixed(2)),
                 },
                 description: 'Pedido de pizzas',
               },
