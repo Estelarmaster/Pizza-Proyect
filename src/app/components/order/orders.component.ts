@@ -90,7 +90,7 @@ import { OrderService } from "../../services/order.service";
                     {{ orderService.getOrderStatusText(order.status) }}
                   </span>
                   <p class="text-lg font-bold text-gray-900 mt-1">
-                    ₹{{ order.total }}
+                    {{ order.total | currency:'COP':'symbol':'1.0-0' }}
                   </p>
                 </div>
               </div>
@@ -119,7 +119,7 @@ import { OrderService } from "../../services/order.service";
                       Tamaño: {{ item.size }} | Cantidad: {{ item.quantity }}
                     </p>
                     <p class="text-sm font-semibold text-red-600">
-                      ₹{{ item.pizza.price * item.quantity }}
+                      {{ (item.pizza.price * item.quantity) | currency:'COP':'symbol':'1.0-0' }}
                     </p>
                   </div>
                 </div>

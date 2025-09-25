@@ -89,7 +89,7 @@ import { AuthService } from "../../services/auth.service";
               <h3 class="font-bold text-lg text-gray-800">
                 {{ item.pizza.name }}
               </h3>
-              <p class="text-red-600 font-bold">₹{{ item.pizza.price }}</p>
+              <p class="text-red-600 font-bold">{{ item.pizza.price | currency:'COP':'symbol':'1.0-0' }}</p>
               <p class="text-sm text-gray-600">Tamaño: {{ item.size }}</p>
             </div>
 
@@ -141,14 +141,14 @@ import { AuthService } from "../../services/auth.service";
           <div class="flex justify-between items-center">
             <span class="text-gray-700">Subtotal</span>
             <span class="font-bold text-red-600"
-              >₹{{ cartService.subtotal() }}</span
+              >{{ cartService.subtotal() | currency:'COP':'symbol':'1.0-0' }}</span
             >
           </div>
 
           <div class="flex justify-between items-center">
             <span class="text-gray-700">Impuestos</span>
             <span class="font-bold text-red-600"
-              >₹{{ cartService.taxes() }}</span
+              >{{ cartService.taxes() | currency:'COP':'symbol':'1.0-0' }}</span
             >
           </div>
 
@@ -158,7 +158,7 @@ import { AuthService } from "../../services/auth.service";
               {{
                 cartService.deliveryFee() === 0
                   ? "Gratis"
-                  : "₹" + cartService.deliveryFee()
+                  : (cartService.deliveryFee() | currency:'COP':'symbol':'1.0-0')
               }}
             </span>
           </div>
@@ -167,7 +167,7 @@ import { AuthService } from "../../services/auth.service";
             <div class="flex justify-between items-center">
               <span class="text-xl font-bold text-gray-800">Total</span>
               <span class="text-xl font-bold text-red-600"
-                >₹{{ cartService.total() }}</span
+                >{{ cartService.total() | currency:'COP':'symbol':'1.0-0' }}</span
               >
             </div>
           </div>

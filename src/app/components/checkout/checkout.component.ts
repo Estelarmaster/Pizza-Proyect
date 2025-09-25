@@ -122,14 +122,14 @@ import { DeliveryAddress } from "../../models/pizza.model";
             <div class="flex justify-between items-center">
               <span class="text-gray-700">Subtotal</span>
               <span class="font-bold text-orange-600"
-                >₹{{ cartService.subtotal() }}</span
+                >{{ cartService.subtotal() | currency:'COP':'symbol':'1.0-0' }}</span
               >
             </div>
 
             <div class="flex justify-between items-center">
               <span class="text-gray-700">Impuestos</span>
               <span class="font-bold text-orange-600"
-                >₹{{ cartService.taxes() }}</span
+                >{{ cartService.taxes() | currency:'COP':'symbol':'1.0-0' }}</span
               >
             </div>
 
@@ -139,7 +139,7 @@ import { DeliveryAddress } from "../../models/pizza.model";
                 {{
                   cartService.deliveryFee() === 0
                     ? "Gratis"
-                    : "₹" + cartService.deliveryFee()
+                    : (cartService.deliveryFee() | currency:'COP':'symbol':'1.0-0')
                 }}
               </span>
             </div>
@@ -228,7 +228,7 @@ import { DeliveryAddress } from "../../models/pizza.model";
           <div class="flex justify-between items-center mb-6">
             <span class="text-xl font-bold text-gray-800">Total</span>
             <span class="text-xl font-bold text-orange-600"
-              >₹{{ cartService.total() }}</span
+              >{{ cartService.total() | currency:'COP':'symbol':'1.0-0' }}</span
             >
           </div>
 
