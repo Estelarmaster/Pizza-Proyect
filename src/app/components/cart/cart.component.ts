@@ -89,7 +89,9 @@ import { AuthService } from "../../services/auth.service";
               <h3 class="font-bold text-lg text-gray-800">
                 {{ item.pizza.name }}
               </h3>
-              <p class="text-red-600 font-bold">{{ item.pizza.price | currency:'COP':'symbol':'1.0-0' }}</p>
+              <p class="text-red-600 font-bold">
+                {{ item.pizza.price | currency: "COP" : "symbol" : "1.0-0" }}
+              </p>
               <p class="text-sm text-gray-600">Tamaño: {{ item.size }}</p>
             </div>
 
@@ -140,16 +142,16 @@ import { AuthService } from "../../services/auth.service";
         <div class="bg-white rounded-t-3xl p-6 space-y-4">
           <div class="flex justify-between items-center">
             <span class="text-gray-700">Subtotal</span>
-            <span class="font-bold text-red-600"
-              >{{ cartService.subtotal() | currency:'COP':'symbol':'1.0-0' }}</span
-            >
+            <span class="font-bold text-red-600">{{
+              cartService.subtotal() | currency: "COP" : "symbol" : "1.0-0"
+            }}</span>
           </div>
 
           <div class="flex justify-between items-center">
             <span class="text-gray-700">Impuestos</span>
-            <span class="font-bold text-red-600"
-              >{{ cartService.taxes() | currency:'COP':'symbol':'1.0-0' }}</span
-            >
+            <span class="font-bold text-red-600">{{
+              cartService.taxes() | currency: "COP" : "symbol" : "1.0-0"
+            }}</span>
           </div>
 
           <div class="flex justify-between items-center">
@@ -158,7 +160,8 @@ import { AuthService } from "../../services/auth.service";
               {{
                 cartService.deliveryFee() === 0
                   ? "Gratis"
-                  : (cartService.deliveryFee() | currency:'COP':'symbol':'1.0-0')
+                  : (cartService.deliveryFee()
+                    | currency: "COP" : "symbol" : "1.0-0")
               }}
             </span>
           </div>
@@ -166,9 +169,9 @@ import { AuthService } from "../../services/auth.service";
           <div class="border-t pt-4">
             <div class="flex justify-between items-center">
               <span class="text-xl font-bold text-gray-800">Total</span>
-              <span class="text-xl font-bold text-red-600"
-                >{{ cartService.total() | currency:'COP':'symbol':'1.0-0' }}</span
-              >
+              <span class="text-xl font-bold text-red-600">{{
+                cartService.total() | currency: "COP" : "symbol" : "1.0-0"
+              }}</span>
             </div>
           </div>
 

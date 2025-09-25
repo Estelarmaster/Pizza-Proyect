@@ -13,6 +13,6 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withHashLocation()),
-    { provide: LOCALE_ID, useValue: 'es-CO' },
+    { provide: LOCALE_ID, useValue: "es-CO" },
   ],
 };

@@ -120,7 +120,7 @@ import { Pizza } from "../../models/pizza.model";
                 </h3>
                 <p class="text-gray-300 text-sm mb-2">{{ pizza.weight }}</p>
                 <p class="text-yellow-400 font-bold text-lg">
-                  {{ pizza.price | currency:'COP':'symbol':'1.0-0' }}
+                  {{ pizza.price | currency: "COP" : "symbol" : "1.0-0" }}
                 </p>
               </div>
 

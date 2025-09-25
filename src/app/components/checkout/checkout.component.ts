@@ -1,4 +1,10 @@
-import { Component, ElementRef, ViewChild, signal, effect } from "@angular/core";
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  signal,
+  effect,
+} from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
@@ -123,16 +129,16 @@ import { CurrencyService } from "../../services/currency.service";
           <div class="space-y-3">
             <div class="flex justify-between items-center">
               <span class="text-gray-700">Subtotal</span>
-              <span class="font-bold text-orange-600"
-                >{{ cartService.subtotal() | currency:'COP':'symbol':'1.0-0' }}</span
-              >
+              <span class="font-bold text-orange-600">{{
+                cartService.subtotal() | currency: "COP" : "symbol" : "1.0-0"
+              }}</span>
             </div>
 
             <div class="flex justify-between items-center">
               <span class="text-gray-700">Impuestos</span>
-              <span class="font-bold text-orange-600"
-                >{{ cartService.taxes() | currency:'COP':'symbol':'1.0-0' }}</span
-              >
+              <span class="font-bold text-orange-600">{{
+                cartService.taxes() | currency: "COP" : "symbol" : "1.0-0"
+              }}</span>
             </div>
 
             <div class="flex justify-between items-center">
@@ -141,7 +147,8 @@ import { CurrencyService } from "../../services/currency.service";
                 {{
                   cartService.deliveryFee() === 0
                     ? "Gratis"
-                    : (cartService.deliveryFee() | currency:'COP':'symbol':'1.0-0')
+                    : (cartService.deliveryFee()
+                      | currency: "COP" : "symbol" : "1.0-0")
                 }}
               </span>
             </div>
@@ -226,28 +233,40 @@ import { CurrencyService } from "../../services/currency.service";
         </div>
 
         <!-- PayPal Buttons -->
-        <div *ngIf="selectedPaymentMethod() === 'online'" class="bg-white rounded-xl p-6">
+        <div
+          *ngIf="selectedPaymentMethod() === 'online'"
+          class="bg-white rounded-xl p-6"
+        >
           <h3 class="text-lg font-bold text-gray-800 mb-3">Pagar con PayPal</h3>
           <div #paypalButtons></div>
           <p class="text-sm text-gray-700 mt-3">
-            Se cobrará en USD: <span class="font-bold">{{ usdEstimate() | currency:'USD':'symbol':'1.2-2' }}</span>
+            Se cobrará en USD:
+            <span class="font-bold">{{
+              usdEstimate() | currency: "USD" : "symbol" : "1.2-2"
+            }}</span>
           </p>
-          <p class="text-xs text-gray-500">Mostramos COP en la app, pero PayPal no admite COP. Convertimos a USD automáticamente.</p>
+          <p class="text-xs text-gray-500">
+            Mostramos COP en la app, pero PayPal no admite COP. Convertimos a
+            USD automáticamente.
+          </p>
         </div>
 
         <!-- Total and Order Button -->
         <div class="bg-cream-200 rounded-xl p-6">
           <div class="flex justify-between items-center mb-6">
             <span class="text-xl font-bold text-gray-800">Total</span>
-            <span class="text-xl font-bold text-orange-600"
-              >{{ cartService.total() | currency:'COP':'symbol':'1.0-0' }}</span
-            >
+            <span class="text-xl font-bold text-orange-600">{{
+              cartService.total() | currency: "COP" : "symbol" : "1.0-0"
+            }}</span>
           </div>
 
           <button
             (click)="placeOrder()"
             [disabled]="
-              !selectedAddress() || !selectedPaymentMethod() || isPlacingOrder() || selectedPaymentMethod()==='online'
+              !selectedAddress() ||
+              !selectedPaymentMethod() ||
+              isPlacingOrder() ||
+              selectedPaymentMethod() === 'online'
             "
             class="w-full bg-orange-600 hover:bg-orange-700 disabled:bg-gray-400 text-white font-bold py-4 rounded-xl transition-colors duration-200"
           >
@@ -285,7 +304,8 @@ import { CurrencyService } from "../../services/currency.service";
   `,
 })
 export class CheckoutComponent {
-  @ViewChild('paypalButtons', { static: false }) paypalButtonsRef?: ElementRef<HTMLDivElement>;
+  @ViewChild("paypalButtons", { static: false })
+  paypalButtonsRef?: ElementRef<HTMLDivElement>;
   selectedAddress = signal<DeliveryAddress | null>(null);
   selectedPaymentMethod = signal<"cash" | "online" | null>(null);
   isPlacingOrder = signal(false);
@@ -320,7 +340,7 @@ export class CheckoutComponent {
 
     // Render PayPal buttons when user selects online payment
     effect(() => {
-      if (this.selectedPaymentMethod() === 'online') {
+      if (this.selectedPaymentMethod() === "online") {
         this.renderPayPalButtons();
       }
     });
@@ -328,45 +348,52 @@ export class CheckoutComponent {
 
   private async renderPayPalButtons() {
     try {
-      await this.paypal.loadSdk('USD');
+      await this.paypal.loadSdk("USD");
       const container = this.paypalButtonsRef?.nativeElement;
       if (!container || !window.paypal) return;
-      container.innerHTML = '';
+      container.innerHTML = "";
 
       const totalCop = Math.max(0, this.cartService.total());
       const totalUsd = this.currency.convertCopToUsd(totalCop);
       this.usdEstimate.set(totalUsd);
-      window.paypal.Buttons({
-        style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' },
-        createOrder: (_data: any, actions: any) => {
-          return actions.order.create({
-            purchase_units: [
-              {
-                amount: {
-                  currency_code: 'USD',
-                  value: String(totalUsd.toFixed(2)),
+      window.paypal
+        .Buttons({
+          style: {
+            layout: "vertical",
+            color: "gold",
+            shape: "rect",
+            label: "paypal",
+          },
+          createOrder: (_data: any, actions: any) => {
+            return actions.order.create({
+              purchase_units: [
+                {
+                  amount: {
+                    currency_code: "USD",
+                    value: String(totalUsd.toFixed(2)),
+                  },
+                  description: "Pedido de pizzas",
                 },
-                description: 'Pedido de pizzas',
-              },
-            ],
-            application_context: { shipping_preference: 'NO_SHIPPING' },
-          });
-        },
-        onApprove: async (_data: any, actions: any) => {
-          try {
-            await actions.order.capture();
-            this.selectedPaymentMethod.set('online');
-            this.placeOrder();
-          } catch (e) {
-            console.error('PayPal capture error', e);
-          }
-        },
-        onError: (err: any) => {
-          console.error('PayPal error', err);
-        },
-      }).render(container);
+              ],
+              application_context: { shipping_preference: "NO_SHIPPING" },
+            });
+          },
+          onApprove: async (_data: any, actions: any) => {
+            try {
+              await actions.order.capture();
+              this.selectedPaymentMethod.set("online");
+              this.placeOrder();
+            } catch (e) {
+              console.error("PayPal capture error", e);
+            }
+          },
+          onError: (err: any) => {
+            console.error("PayPal error", err);
+          },
+        })
+        .render(container);
     } catch (e) {
-      console.error('Error loading PayPal SDK', e);
+      console.error("Error loading PayPal SDK", e);
     }
   }
 

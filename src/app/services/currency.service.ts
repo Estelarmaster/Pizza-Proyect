@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class CurrencyService {
-  private readonly key = 'copToUsdRate';
+  private readonly key = "copToUsdRate";
   private readonly defaultRate = 0.00025; // 1 COP = 0.00025 USD (aprox)
 
   getCopToUsdRate(): number {
