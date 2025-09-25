@@ -1,10 +1,11 @@
-import { Component, signal } from "@angular/core";
+import { Component, ElementRef, ViewChild, signal, effect } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
 import { CartService } from "../../services/cart.service";
 import { OrderService } from "../../services/order.service";
 import { DeliveryAddress } from "../../models/pizza.model";
+import { PaypalService } from "../../services/paypal.service";
 
 @Component({
   selector: "app-checkout",
@@ -223,6 +224,13 @@ import { DeliveryAddress } from "../../models/pizza.model";
           </div>
         </div>
 
+        <!-- PayPal Buttons -->
+        <div *ngIf="selectedPaymentMethod() === 'online'" class="bg-white rounded-xl p-6">
+          <h3 class="text-lg font-bold text-gray-800 mb-3">Pagar con PayPal</h3>
+          <div #paypalButtons></div>
+          <p class="text-xs text-gray-500 mt-3">Pago seguro a través de PayPal</p>
+        </div>
+
         <!-- Total and Order Button -->
         <div class="bg-cream-200 rounded-xl p-6">
           <div class="flex justify-between items-center mb-6">
@@ -273,6 +281,7 @@ import { DeliveryAddress } from "../../models/pizza.model";
   `,
 })
 export class CheckoutComponent {
+  @ViewChild('paypalButtons', { static: false }) paypalButtonsRef?: ElementRef<HTMLDivElement>;
   selectedAddress = signal<DeliveryAddress | null>(null);
   selectedPaymentMethod = signal<"cash" | "online" | null>(null);
   isPlacingOrder = signal(false);
@@ -298,9 +307,59 @@ export class CheckoutComponent {
     public cartService: CartService,
     private orderService: OrderService,
     private router: Router,
+    private paypal: PaypalService,
   ) {
     // Pre-select home address
     this.selectedAddress.set(this.homeAddress);
+
+    // Render PayPal buttons when user selects online payment
+    effect(() => {
+      if (this.selectedPaymentMethod() === 'online') {
+        this.renderPayPalButtons();
+      }
+    });
+  }
+
+  private async renderPayPalButtons() {
+    try {
+      await this.paypal.loadSdk('COP');
+      const container = this.paypalButtonsRef?.nativeElement;
+      if (!container || !window.paypal) return;
+      container.innerHTML = '';
+
+      const total = Math.max(0, this.cartService.total());
+      window.paypal.Buttons({
+        style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' },
+        createOrder: (_data: any, actions: any) => {
+          return actions.order.create({
+            purchase_units: [
+              {
+                amount: {
+                  currency_code: 'COP',
+                  value: String(Math.round(total)),
+                },
+                description: 'Pedido de pizzas',
+              },
+            ],
+            application_context: { shipping_preference: 'NO_SHIPPING' },
+          });
+        },
+        onApprove: async (_data: any, actions: any) => {
+          try {
+            await actions.order.capture();
+            this.selectedPaymentMethod.set('online');
+            this.placeOrder();
+          } catch (e) {
+            console.error('PayPal capture error', e);
+          }
+        },
+        onError: (err: any) => {
+          console.error('PayPal error', err);
+        },
+      }).render(container);
+    } catch (e) {
+      console.error('Error loading PayPal SDK', e);
+    }
   }
 
   goBack() {
