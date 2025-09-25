@@ -243,7 +243,7 @@ import { PaypalService } from "../../services/paypal.service";
           <button
             (click)="placeOrder()"
             [disabled]="
-              !selectedAddress() || !selectedPaymentMethod() || isPlacingOrder()
+              !selectedAddress() || !selectedPaymentMethod() || isPlacingOrder() || selectedPaymentMethod()==='online'
             "
             class="w-full bg-orange-600 hover:bg-orange-700 disabled:bg-gray-400 text-white font-bold py-4 rounded-xl transition-colors duration-200"
           >
