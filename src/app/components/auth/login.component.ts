@@ -148,17 +148,19 @@ export class LoginComponent {
     this.isLoading.set(true);
     this.errorMessage.set("");
 
-    // Simulate API call delay
-    setTimeout(() => {
-      const success = this.authService.login(this.email, this.password);
-
-      if (success) {
-        this.router.navigate(["/menu"]);
-      } else {
-        this.errorMessage.set("Credenciales incorrectas");
+    (async () => {
+      try {
+        const success = await this.authService.login(this.email, this.password);
+        if (success) {
+          this.router.navigate(["/menu"]);
+        } else {
+          this.errorMessage.set("Credenciales incorrectas");
+        }
+      } catch {
+        this.errorMessage.set("Ocurrió un error al iniciar sesión");
+      } finally {
+        this.isLoading.set(false);
       }
-
-      this.isLoading.set(false);
-    }, 1000);
+    })();
   }
 }
