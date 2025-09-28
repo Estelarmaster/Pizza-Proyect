@@ -6,9 +6,11 @@ const FALLBACK_PIZZAS: Pizza[] = [
   {
     id: "1",
     name: "Margarita",
-    description: "Clásica pizza italiana con tomate, mozzarella y albahaca fresca",
+    description:
+      "Clásica pizza italiana con tomate, mozzarella y albahaca fresca",
     price: 500,
-    image: "https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?w=400&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?w=400&h=400&fit=crop",
     weight: "540g",
     ingredients: ["Tomate", "Mozzarella", "Albahaca", "Aceite de oliva"],
     category: "classic",
@@ -19,7 +21,8 @@ const FALLBACK_PIZZAS: Pizza[] = [
     name: "Fiesta Picante",
     description: "Pizza picante con pepperoni, jalapeños y salsa especial",
     price: 200,
-    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=400&fit=crop",
     weight: "440g",
     ingredients: ["Pepperoni", "Jalapeños", "Mozzarella", "Salsa picante"],
     category: "meat",
@@ -30,7 +33,8 @@ const FALLBACK_PIZZAS: Pizza[] = [
     name: "BBQ",
     description: "Deliciosa pizza BBQ con pollo, cebolla y salsa barbacoa",
     price: 500,
-    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=400&fit=crop",
     weight: "340g",
     ingredients: ["Pollo BBQ", "Cebolla", "Mozzarella", "Salsa BBQ"],
     category: "meat",
@@ -41,7 +45,8 @@ const FALLBACK_PIZZAS: Pizza[] = [
     name: "Delicia de Queso",
     description: "Mezcla perfecta de 4 quesos premium",
     price: 400,
-    image: "https://images.unsplash.com/photo-1571066811602-716837d681de?w=400&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1571066811602-716837d681de?w=400&h=400&fit=crop",
     weight: "540g",
     ingredients: ["Mozzarella", "Parmesano", "Gorgonzola", "Ricotta"],
     category: "classic",
@@ -52,7 +57,8 @@ const FALLBACK_PIZZAS: Pizza[] = [
     name: "Pedazo de Cielo",
     description: "Pizza vegetariana con verduras frescas de temporada",
     price: 100,
-    image: "https://images.unsplash.com/photo-1506280754576-f6fa8a873550?w=400&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1506280754576-f6fa8a873550?w=400&h=400&fit=crop",
     weight: "500g",
     ingredients: ["Tomates cherry", "Espinaca", "Pimientos", "Aceitunas"],
     category: "vegetarian",
@@ -63,7 +69,8 @@ const FALLBACK_PIZZAS: Pizza[] = [
     name: "Maravilla",
     description: "Pizza especial con ingredientes únicos",
     price: 500,
-    image: "https://images.unsplash.com/photo-1595708684082-a173bb3a06c5?w=400&h=400&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1595708684082-a173bb3a06c5?w=400&h=400&fit=crop",
     weight: "250g",
     ingredients: ["Prosciutto", "Rúcula", "Tomates secos", "Mozzarella"],
     category: "meat",
@@ -98,8 +105,8 @@ export class PizzaService {
       ingredients: Array.isArray(row.ingredients)
         ? row.ingredients
         : typeof row.ingredients === "string" && row.ingredients
-        ? row.ingredients.split(",").map((s: string) => s.trim())
-        : [],
+          ? row.ingredients.split(",").map((s: string) => s.trim())
+          : [],
       category: row.category as Pizza["category"],
       available: Boolean(row.available),
     };
@@ -157,16 +164,24 @@ export class PizzaService {
         .single();
       if (!error && data) {
         const updated = this.mapRowToPizza(data);
-        this.pizzas.update((p) => p.map((x) => (x.id === id ? { ...x, ...updated } : x)));
+        this.pizzas.update((p) =>
+          p.map((x) => (x.id === id ? { ...x, ...updated } : x)),
+        );
       }
       return;
     }
-    this.pizzas.update((p) => p.map((x) => (x.id === id ? { ...x, ...updates } : x)));
+    this.pizzas.update((p) =>
+      p.map((x) => (x.id === id ? { ...x, ...updates } : x)),
+    );
   }
 
   async deletePizza(id: string): Promise<void> {
     if (this.supabase.isEnabled()) {
-      const { error } = await this.supabase.getClient().from("pizzas").delete().eq("id", id);
+      const { error } = await this.supabase
+        .getClient()
+        .from("pizzas")
+        .delete()
+        .eq("id", id);
       if (!error) {
         this.pizzas.update((p) => p.filter((x) => x.id !== id));
       }
@@ -181,7 +196,9 @@ export class PizzaService {
       (pizza) =>
         pizza.name.toLowerCase().includes(searchTerm) ||
         pizza.description.toLowerCase().includes(searchTerm) ||
-        pizza.ingredients.some((ingredient) => ingredient.toLowerCase().includes(searchTerm)),
+        pizza.ingredients.some((ingredient) =>
+          ingredient.toLowerCase().includes(searchTerm),
+        ),
     );
   }
 }

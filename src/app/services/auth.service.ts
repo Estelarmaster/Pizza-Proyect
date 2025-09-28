@@ -43,15 +43,15 @@ export class AuthService {
     const addresses: DeliveryAddress[] = Array.isArray(rawAddresses)
       ? rawAddresses
       : typeof rawAddresses === "string" && rawAddresses
-      ? (() => {
-          try {
-            const parsed = JSON.parse(rawAddresses);
-            return Array.isArray(parsed) ? parsed : [];
-          } catch {
-            return [];
-          }
-        })()
-      : [];
+        ? (() => {
+            try {
+              const parsed = JSON.parse(rawAddresses);
+              return Array.isArray(parsed) ? parsed : [];
+            } catch {
+              return [];
+            }
+          })()
+        : [];
     return {
       id: String(row.id),
       name: row.name ?? "",
@@ -93,7 +93,11 @@ export class AuthService {
     return false;
   }
 
-  async register(name: string, email: string, _password: string): Promise<boolean> {
+  async register(
+    name: string,
+    email: string,
+    _password: string,
+  ): Promise<boolean> {
     if (this.supabase.isEnabled()) {
       const { data: existing } = await this.supabase
         .getClient()
@@ -196,7 +200,11 @@ export class AuthService {
       localStorage.setItem("currentUser", JSON.stringify(updatedUser));
       if (this.supabase.isEnabled()) {
         const payload: any = { ...updates };
-        await this.supabase.getClient().from("users").update(payload).eq("id", user.id);
+        await this.supabase
+          .getClient()
+          .from("users")
+          .update(payload)
+          .eq("id", user.id);
       }
     }
   }

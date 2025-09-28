@@ -21,7 +21,9 @@ export class SupabaseService {
 
   getClient(): SupabaseClient {
     if (!this.client) {
-      throw new Error("Supabase no está configurado (faltan SUPABASE_URL o SUPABASE_ANON_KEY)");
+      throw new Error(
+        "Supabase no está configurado (faltan SUPABASE_URL o SUPABASE_ANON_KEY)",
+      );
     }
     return this.client;
   }

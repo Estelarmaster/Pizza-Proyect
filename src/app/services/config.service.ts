@@ -8,8 +8,10 @@ export interface SupabaseConfig {
 function readGlobal(key: string): string | null {
   const g: any = globalThis as any;
   const fromWindow = g[key] ?? g?.__env?.[key] ?? g?.__APP_CONFIG?.[key];
-  if (typeof fromWindow === "string" && fromWindow.trim()) return fromWindow.trim();
-  const fromLocal = typeof localStorage !== "undefined" ? localStorage.getItem(key) : null;
+  if (typeof fromWindow === "string" && fromWindow.trim())
+    return fromWindow.trim();
+  const fromLocal =
+    typeof localStorage !== "undefined" ? localStorage.getItem(key) : null;
   if (fromLocal && fromLocal.trim()) return fromLocal.trim();
   return null;
 }
