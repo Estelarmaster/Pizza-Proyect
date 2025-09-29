@@ -59,7 +59,7 @@ export class AuthService {
       email: row.email,
       avatar: row.avatar ?? undefined,
       addresses,
-      isAdmin: Boolean(row.isAdmin ?? row.is_admin ?? false),
+      isAdmin: Boolean(row.isAdmin ?? row.is_admin ?? row.isadmin ?? false),
     };
   }
 
