@@ -10,7 +10,11 @@ export class SupabaseService {
     const cfg = readSupabaseConfig();
     if (cfg) {
       this.client = createClient(cfg.url, cfg.anonKey, {
-        auth: { persistSession: false },
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false,
+        },
       });
     }
   }
