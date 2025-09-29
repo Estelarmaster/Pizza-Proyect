@@ -89,7 +89,7 @@ export class AuthService {
       return true;
     }
 
-    const user = this.users().find((u) => u.email === email);
+    const user = this.users().find((u) => u.email.toLowerCase() === normEmail);
     if (user) {
       this.currentUser.set(user);
       this.isAuthenticated.set(true);
