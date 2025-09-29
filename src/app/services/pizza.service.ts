@@ -95,6 +95,32 @@ export class PizzaService {
   }
 
   private mapRowToPizza(row: any): Pizza {
+    const rawCat = String(row.category ?? '').toLowerCase();
+    const category = ((): Pizza["category"] => {
+      switch (rawCat) {
+        case 'vegetariana':
+        case 'vegetarian':
+          return 'vegetarian';
+        case 'clasica':
+        case 'clásica':
+        case 'classic':
+          return 'classic';
+        case 'carnes':
+        case 'carne':
+        case 'meat':
+          return 'meat';
+        case 'desayuno':
+        case 'breakfast':
+          return 'breakfast';
+        default:
+          return 'classic';
+      }
+    })();
+    const ingredients = Array.isArray(row.ingredients)
+      ? row.ingredients
+      : typeof row.ingredients === 'string' && row.ingredients
+      ? row.ingredients.split(',').map((s: string) => s.trim())
+      : [];
     return {
       id: String(row.id),
       name: row.name,
@@ -102,12 +128,8 @@ export class PizzaService {
       price: Number(row.price),
       image: row.image ?? "",
       weight: row.weight ?? "",
-      ingredients: Array.isArray(row.ingredients)
-        ? row.ingredients
-        : typeof row.ingredients === "string" && row.ingredients
-          ? row.ingredients.split(",").map((s: string) => s.trim())
-          : [],
-      category: row.category as Pizza["category"],
+      ingredients,
+      category,
       available: Boolean(row.available),
     };
   }
