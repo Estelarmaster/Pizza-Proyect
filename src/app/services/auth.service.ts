@@ -1,6 +1,7 @@
 import { Injectable, signal } from "@angular/core";
 import { User, DeliveryAddress } from "../models/pizza.model";
 import { SupabaseService } from "./supabase.service";
+import * as bcrypt from "bcryptjs";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
@@ -74,6 +75,11 @@ export class AuthService {
       if (error || !data) {
         return false;
       }
+      const hash: string = (data as any).password_hash || "";
+      const ok = !!hash && bcrypt.compareSync(_password, hash);
+      if (!ok) {
+        return false;
+      }
       const user = this.mapRowToUser(data);
       this.currentUser.set(user);
       this.isAuthenticated.set(true);
@@ -115,6 +121,7 @@ export class AuthService {
         isAdmin: false,
         addresses: [],
       };
+      const password_hash = bcrypt.hashSync(_password, 10);
       const { data, error } = await this.supabase
         .getClient()
         .from("users")
@@ -124,6 +131,7 @@ export class AuthService {
             email: newUser.email,
             isAdmin: newUser.isAdmin,
             addresses: newUser.addresses,
+            password_hash,
           },
         ])
         .select()
