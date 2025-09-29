@@ -149,7 +149,9 @@ export class AuthService {
       return true;
     }
 
-    const existingUser = this.users().find((u) => u.email.toLowerCase() === normEmail);
+    const existingUser = this.users().find(
+      (u) => u.email.toLowerCase() === normEmail,
+    );
     if (existingUser) return false;
 
     const newUser: User = {
