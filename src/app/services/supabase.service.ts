@@ -14,6 +14,7 @@ export class SupabaseService {
           persistSession: false,
           autoRefreshToken: false,
           detectSessionInUrl: false,
+          storageKey: "fusion_auth_token",
         },
       });
     }
