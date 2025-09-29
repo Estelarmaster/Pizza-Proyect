@@ -130,7 +130,7 @@ export class AuthService {
         .insert([
           {
             name: newUser.name,
-            email: newUser.email,
+            email: normEmail,
             isAdmin: newUser.isAdmin,
             addresses: newUser.addresses,
             password_hash,
