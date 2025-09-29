@@ -194,7 +194,13 @@ export class MenuComponent implements OnInit {
 
     // Filter by search query
     if (this.searchQuery.trim()) {
-      pizzas = this.pizzaService.searchPizzas(this.searchQuery);
+      const term = this.searchQuery.toLowerCase();
+      pizzas = pizzas.filter(
+        (pizza) =>
+          pizza.name.toLowerCase().includes(term) ||
+          (pizza.description || '').toLowerCase().includes(term) ||
+          (pizza.ingredients || []).some((i) => i.toLowerCase().includes(term)),
+      );
     }
 
     return pizzas;
