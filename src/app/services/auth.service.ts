@@ -105,6 +105,7 @@ export class AuthService {
     email: string,
     _password: string,
   ): Promise<boolean> {
+    const normEmail = email.trim().toLowerCase();
     if (this.supabase.isEnabled()) {
       const { data: existing } = await this.supabase
         .getClient()
