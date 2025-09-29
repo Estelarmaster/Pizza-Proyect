@@ -110,7 +110,7 @@ export class AuthService {
         .getClient()
         .from("users")
         .select("id")
-        .eq("email", email)
+        .eq("email", normEmail)
         .limit(1)
         .maybeSingle();
       if (existing) {
