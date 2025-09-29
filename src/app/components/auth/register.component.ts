@@ -219,8 +219,8 @@ export class RegisterComponent {
         } else {
           this.errorMessage.set("Este email ya está registrado");
         }
-      } catch {
-        this.errorMessage.set("Ocurrió un error al registrarte");
+      } catch (e: any) {
+        this.errorMessage.set(e?.message || "Ocurrió un error al registrarte");
       } finally {
         this.isLoading.set(false);
       }
