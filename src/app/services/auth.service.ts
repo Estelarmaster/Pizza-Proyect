@@ -64,6 +64,7 @@ export class AuthService {
   }
 
   async login(email: string, _password: string): Promise<boolean> {
+    const normEmail = email.trim().toLowerCase();
     if (this.supabase.isEnabled()) {
       const { data, error } = await this.supabase
         .getClient()
