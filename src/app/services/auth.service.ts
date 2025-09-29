@@ -115,7 +115,7 @@ export class AuthService {
         .limit(1)
         .maybeSingle();
       if (existing) {
-        return false;
+        throw new Error("Este email ya está registrado");
       }
       const newUser: Omit<User, "id"> = {
         name,
@@ -138,7 +138,9 @@ export class AuthService {
         ])
         .select()
         .single();
-      if (error || !data) return false;
+      if (error || !data) {
+        throw new Error(error?.message || "Error al registrar usuario");
+      }
       const user = this.mapRowToUser(data);
       this.currentUser.set(user);
       this.isAuthenticated.set(true);
