@@ -120,7 +120,7 @@ import { Pizza } from "../../models/pizza.model";
                 </h3>
                 <p class="text-gray-300 text-sm mb-2">{{ pizza.weight }}</p>
                 <p class="text-yellow-400 font-bold text-lg">
-                  ₹{{ pizza.price }}
+                  {{ pizza.price | currency: "COP" : "symbol" : "1.0-0" }}
                 </p>
               </div>
 
@@ -194,7 +194,13 @@ export class MenuComponent implements OnInit {
 
     // Filter by search query
     if (this.searchQuery.trim()) {
-      pizzas = this.pizzaService.searchPizzas(this.searchQuery);
+      const term = this.searchQuery.toLowerCase();
+      pizzas = pizzas.filter(
+        (pizza) =>
+          pizza.name.toLowerCase().includes(term) ||
+          (pizza.description || '').toLowerCase().includes(term) ||
+          (pizza.ingredients || []).some((i) => i.toLowerCase().includes(term)),
+      );
     }
 
     return pizzas;

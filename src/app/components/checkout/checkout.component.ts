@@ -1,10 +1,18 @@
-import { Component, signal } from "@angular/core";
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  signal,
+  effect,
+} from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
 import { CartService } from "../../services/cart.service";
 import { OrderService } from "../../services/order.service";
 import { DeliveryAddress } from "../../models/pizza.model";
+import { PaypalService } from "../../services/paypal.service";
+import { CurrencyService } from "../../services/currency.service";
 
 @Component({
   selector: "app-checkout",
@@ -121,16 +129,16 @@ import { DeliveryAddress } from "../../models/pizza.model";
           <div class="space-y-3">
             <div class="flex justify-between items-center">
               <span class="text-gray-700">Subtotal</span>
-              <span class="font-bold text-orange-600"
-                >₹{{ cartService.subtotal() }}</span
-              >
+              <span class="font-bold text-orange-600">{{
+                cartService.subtotal() | currency: "COP" : "symbol" : "1.0-0"
+              }}</span>
             </div>
 
             <div class="flex justify-between items-center">
               <span class="text-gray-700">Impuestos</span>
-              <span class="font-bold text-orange-600"
-                >₹{{ cartService.taxes() }}</span
-              >
+              <span class="font-bold text-orange-600">{{
+                cartService.taxes() | currency: "COP" : "symbol" : "1.0-0"
+              }}</span>
             </div>
 
             <div class="flex justify-between items-center">
@@ -139,7 +147,8 @@ import { DeliveryAddress } from "../../models/pizza.model";
                 {{
                   cartService.deliveryFee() === 0
                     ? "Gratis"
-                    : "₹" + cartService.deliveryFee()
+                    : (cartService.deliveryFee()
+                      | currency: "COP" : "symbol" : "1.0-0")
                 }}
               </span>
             </div>
@@ -223,19 +232,41 @@ import { DeliveryAddress } from "../../models/pizza.model";
           </div>
         </div>
 
+        <!-- PayPal Buttons -->
+        <div
+          *ngIf="selectedPaymentMethod() === 'online'"
+          class="bg-white rounded-xl p-6"
+        >
+          <h3 class="text-lg font-bold text-gray-800 mb-3">Pagar con PayPal</h3>
+          <div #paypalButtons></div>
+          <p class="text-sm text-gray-700 mt-3">
+            Se cobrará en USD:
+            <span class="font-bold">{{
+              usdEstimate() | currency: "USD" : "symbol" : "1.2-2"
+            }}</span>
+          </p>
+          <p class="text-xs text-gray-500">
+            Mostramos COP en la app, pero PayPal no admite COP. Convertimos a
+            USD automáticamente.
+          </p>
+        </div>
+
         <!-- Total and Order Button -->
         <div class="bg-cream-200 rounded-xl p-6">
           <div class="flex justify-between items-center mb-6">
             <span class="text-xl font-bold text-gray-800">Total</span>
-            <span class="text-xl font-bold text-orange-600"
-              >₹{{ cartService.total() }}</span
-            >
+            <span class="text-xl font-bold text-orange-600">{{
+              cartService.total() | currency: "COP" : "symbol" : "1.0-0"
+            }}</span>
           </div>
 
           <button
             (click)="placeOrder()"
             [disabled]="
-              !selectedAddress() || !selectedPaymentMethod() || isPlacingOrder()
+              !selectedAddress() ||
+              !selectedPaymentMethod() ||
+              isPlacingOrder() ||
+              selectedPaymentMethod() === 'online'
             "
             class="w-full bg-orange-600 hover:bg-orange-700 disabled:bg-gray-400 text-white font-bold py-4 rounded-xl transition-colors duration-200"
           >
@@ -273,9 +304,12 @@ import { DeliveryAddress } from "../../models/pizza.model";
   `,
 })
 export class CheckoutComponent {
+  @ViewChild("paypalButtons", { static: false })
+  paypalButtonsRef?: ElementRef<HTMLDivElement>;
   selectedAddress = signal<DeliveryAddress | null>(null);
   selectedPaymentMethod = signal<"cash" | "online" | null>(null);
   isPlacingOrder = signal(false);
+  usdEstimate = signal(0);
 
   homeAddress: DeliveryAddress = {
     type: "home",
@@ -298,9 +332,69 @@ export class CheckoutComponent {
     public cartService: CartService,
     private orderService: OrderService,
     private router: Router,
+    private paypal: PaypalService,
+    private currency: CurrencyService,
   ) {
     // Pre-select home address
     this.selectedAddress.set(this.homeAddress);
+
+    // Render PayPal buttons when user selects online payment
+    effect(() => {
+      if (this.selectedPaymentMethod() === "online") {
+        this.renderPayPalButtons();
+      }
+    });
+  }
+
+  private async renderPayPalButtons() {
+    try {
+      await this.paypal.loadSdk("USD");
+      const container = this.paypalButtonsRef?.nativeElement;
+      if (!container || !window.paypal) return;
+      container.innerHTML = "";
+
+      const totalCop = Math.max(0, this.cartService.total());
+      const totalUsd = this.currency.convertCopToUsd(totalCop);
+      this.usdEstimate.set(totalUsd);
+      window.paypal
+        .Buttons({
+          style: {
+            layout: "vertical",
+            color: "gold",
+            shape: "rect",
+            label: "paypal",
+          },
+          createOrder: (_data: any, actions: any) => {
+            return actions.order.create({
+              purchase_units: [
+                {
+                  amount: {
+                    currency_code: "USD",
+                    value: String(totalUsd.toFixed(2)),
+                  },
+                  description: "Pedido de pizzas",
+                },
+              ],
+              application_context: { shipping_preference: "NO_SHIPPING" },
+            });
+          },
+          onApprove: async (_data: any, actions: any) => {
+            try {
+              await actions.order.capture();
+              this.selectedPaymentMethod.set("online");
+              this.placeOrder();
+            } catch (e) {
+              console.error("PayPal capture error", e);
+            }
+          },
+          onError: (err: any) => {
+            console.error("PayPal error", err);
+          },
+        })
+        .render(container);
+    } catch (e) {
+      console.error("Error loading PayPal SDK", e);
+    }
   }
 
   goBack() {

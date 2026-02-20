@@ -207,21 +207,23 @@ export class RegisterComponent {
     this.isLoading.set(true);
     this.errorMessage.set("");
 
-    // Simulate API call delay
-    setTimeout(() => {
-      const success = this.authService.register(
-        this.name,
-        this.email,
-        this.password,
-      );
-
-      if (success) {
-        this.router.navigate(["/menu"]);
-      } else {
-        this.errorMessage.set("Este email ya está registrado");
+    (async () => {
+      try {
+        const success = await this.authService.register(
+          this.name,
+          this.email,
+          this.password,
+        );
+        if (success) {
+          this.router.navigate(["/menu"]);
+        } else {
+          this.errorMessage.set("Este email ya está registrado");
+        }
+      } catch (e: any) {
+        this.errorMessage.set(e?.message || "Ocurrió un error al registrarte");
+      } finally {
+        this.isLoading.set(false);
       }
-
-      this.isLoading.set(false);
-    }, 1000);
+    })();
   }
 }

@@ -1,9 +1,9 @@
 import { Injectable, signal } from "@angular/core";
 import { User, DeliveryAddress } from "../models/pizza.model";
+import { SupabaseService } from "./supabase.service";
+import * as bcrypt from "bcryptjs";
 
-@Injectable({
-  providedIn: "root",
-})
+@Injectable({ providedIn: "root" })
 export class AuthService {
   private currentUser = signal<User | null>(null);
   private users = signal<User[]>([
@@ -37,8 +37,59 @@ export class AuthService {
   readonly isAuthenticated = signal(false);
   readonly isAdmin = signal(false);
 
-  login(email: string, password: string): boolean {
-    const user = this.users().find((u) => u.email === email);
+  constructor(private supabase: SupabaseService) {}
+
+  private mapRowToUser(row: any): User {
+    const rawAddresses = row.addresses;
+    const addresses: DeliveryAddress[] = Array.isArray(rawAddresses)
+      ? rawAddresses
+      : typeof rawAddresses === "string" && rawAddresses
+        ? (() => {
+            try {
+              const parsed = JSON.parse(rawAddresses);
+              return Array.isArray(parsed) ? parsed : [];
+            } catch {
+              return [];
+            }
+          })()
+        : [];
+    return {
+      id: String(row.id),
+      name: row.name ?? "",
+      email: row.email,
+      avatar: row.avatar ?? undefined,
+      addresses,
+      isAdmin: Boolean(row.isAdmin ?? row.is_admin ?? row.isadmin ?? false),
+    };
+  }
+
+  async login(email: string, _password: string): Promise<boolean> {
+    const normEmail = email.trim().toLowerCase();
+    if (this.supabase.isEnabled()) {
+      const { data, error } = await this.supabase
+        .getClient()
+        .from("users")
+        .select("*")
+        .eq("email", normEmail)
+        .limit(1)
+        .maybeSingle();
+      if (error || !data) {
+        return false;
+      }
+      const hash: string = (data as any).password_hash || "";
+      const ok = !!hash && bcrypt.compareSync(_password, hash);
+      if (!ok) {
+        return false;
+      }
+      const user = this.mapRowToUser(data);
+      this.currentUser.set(user);
+      this.isAuthenticated.set(true);
+      this.isAdmin.set(user.isAdmin);
+      localStorage.setItem("currentUser", JSON.stringify(user));
+      return true;
+    }
+
+    const user = this.users().find((u) => u.email.toLowerCase() === normEmail);
     if (user) {
       this.currentUser.set(user);
       this.isAuthenticated.set(true);
@@ -49,11 +100,59 @@ export class AuthService {
     return false;
   }
 
-  register(name: string, email: string, password: string): boolean {
-    const existingUser = this.users().find((u) => u.email === email);
-    if (existingUser) {
-      return false;
+  async register(
+    name: string,
+    email: string,
+    _password: string,
+  ): Promise<boolean> {
+    const normEmail = email.trim().toLowerCase();
+    if (this.supabase.isEnabled()) {
+      const { data: existing } = await this.supabase
+        .getClient()
+        .from("users")
+        .select("id")
+        .eq("email", normEmail)
+        .limit(1)
+        .maybeSingle();
+      if (existing) {
+        throw new Error("Este email ya está registrado");
+      }
+      const newUser: Omit<User, "id"> = {
+        name,
+        email,
+        isAdmin: false,
+        addresses: [],
+      };
+      const password_hash = bcrypt.hashSync(_password, 10);
+      const { data, error } = await this.supabase
+        .getClient()
+        .from("users")
+        .insert([
+          {
+            name: newUser.name,
+            email: normEmail,
+            isAdmin: newUser.isAdmin,
+            addresses: newUser.addresses,
+            password_hash,
+          },
+        ])
+        .select()
+        .single();
+      if (error || !data) {
+        throw new Error(error?.message || "Error al registrar usuario");
+      }
+      const user = this.mapRowToUser(data);
+      this.currentUser.set(user);
+      this.isAuthenticated.set(true);
+      this.isAdmin.set(false);
+      localStorage.setItem("currentUser", JSON.stringify(user));
+      return true;
     }
+
+    const existingUser = this.users().find(
+      (u) => u.email.toLowerCase() === normEmail,
+    );
+    if (existingUser) return false;
 
     const newUser: User = {
       id: Date.now().toString(),
@@ -88,24 +187,39 @@ export class AuthService {
     }
   }
 
-  addAddress(address: DeliveryAddress): void {
+  async addAddress(address: DeliveryAddress): Promise<void> {
     const user = this.currentUser();
     if (user) {
-      const updatedUser = {
+      const updatedUser: User = {
         ...user,
         addresses: [...user.addresses, address],
       };
       this.currentUser.set(updatedUser);
       localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+      if (this.supabase.isEnabled()) {
+        await this.supabase
+          .getClient()
+          .from("users")
+          .update({ addresses: updatedUser.addresses })
+          .eq("id", user.id);
+      }
     }
   }
 
-  updateProfile(updates: Partial<User>): void {
+  async updateProfile(updates: Partial<User>): Promise<void> {
     const user = this.currentUser();
     if (user) {
-      const updatedUser = { ...user, ...updates };
+      const updatedUser: User = { ...user, ...updates };
       this.currentUser.set(updatedUser);
       localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+      if (this.supabase.isEnabled()) {
+        const payload: any = { ...updates };
+        await this.supabase
+          .getClient()
+          .from("users")
+          .update(payload)
+          .eq("id", user.id);
+      }
     }
   }
 }

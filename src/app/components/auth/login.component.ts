@@ -3,11 +3,12 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
+import { HumanVerificationComponent } from "./human-verification.component";
 
 @Component({
   selector: "app-login",
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, HumanVerificationComponent],
   template: `
     <div class="min-h-screen bg-gradient-to-br from-yellow-200 to-orange-300 flex items-center justify-center p-4">
       <div class="w-full max-w-md">
@@ -73,9 +74,11 @@ import { AuthService } from "../../services/auth.service";
               {{ errorMessage() }}
             </div>
 
+            <app-human-verification (verifiedChange)="onVerified($event)"></app-human-verification>
+
             <button
               type="submit"
-              [disabled]="isLoading()"
+              [disabled]="isLoading() || !humanVerified()"
               class="w-full bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200"
             >
               <span *ngIf="!isLoading()">Iniciar Sesión</span>
@@ -120,11 +123,16 @@ export class LoginComponent {
   password = "";
   isLoading = signal(false);
   errorMessage = signal("");
+  humanVerified = signal(false);
 
   constructor(
     private authService: AuthService,
     private router: Router,
   ) {}
+
+  onVerified(value: boolean) {
+    this.humanVerified.set(value);
+  }
 
   onLogin() {
     if (!this.email || !this.password) {
@@ -132,20 +140,27 @@ export class LoginComponent {
       return;
     }
 
+    if (!this.humanVerified()) {
+      this.errorMessage.set("Por favor verifica que eres una persona real");
+      return;
+    }
+
     this.isLoading.set(true);
     this.errorMessage.set("");
 
-    // Simulate API call delay
-    setTimeout(() => {
-      const success = this.authService.login(this.email, this.password);
-
-      if (success) {
-        this.router.navigate(["/menu"]);
-      } else {
-        this.errorMessage.set("Credenciales incorrectas");
+    (async () => {
+      try {
+        const success = await this.authService.login(this.email, this.password);
+        if (success) {
+          this.router.navigate(["/menu"]);
+        } else {
+          this.errorMessage.set("Credenciales incorrectas");
+        }
+      } catch {
+        this.errorMessage.set("Ocurrió un error al iniciar sesión");
+      } finally {
+        this.isLoading.set(false);
       }
-
-      this.isLoading.set(false);
-    }, 1000);
+    })();
   }
 }

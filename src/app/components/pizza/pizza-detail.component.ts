@@ -159,7 +159,9 @@ import { Pizza } from "../../models/pizza.model";
             <!-- Bottom Section with Price and Add Button -->
             <div class="bg-red-600 rounded-2xl p-4 text-white">
               <div class="flex items-center justify-between mb-4">
-                <span class="text-2xl font-bold">₹{{ pizza()!.price }}</span>
+                <span class="text-2xl font-bold">{{
+                  pizza()!.price | currency: "COP" : "symbol" : "1.0-0"
+                }}</span>
 
                 <!-- Quantity Selector -->
                 <div class="flex items-center bg-cream-200 rounded-full">

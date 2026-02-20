@@ -115,7 +115,7 @@ import { Pizza } from "../../models/pizza.model";
 
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1"
-                    >Precio (₹)</label
+                    >Precio (COP)</label
                   >
                   <input
                     type="number"
@@ -272,7 +272,7 @@ import { Pizza } from "../../models/pizza.model";
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    ₹{{ pizza.price }}
+                    {{ pizza.price | currency: "COP" : "symbol" : "1.0-0" }}
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <span
@@ -343,7 +343,8 @@ import { Pizza } from "../../models/pizza.model";
                       {{ order.createdAt | date: "short" }}
                     </p>
                     <p class="text-sm text-gray-500">
-                      {{ order.items.length }} items - ₹{{ order.total }}
+                      {{ order.items.length }} items -
+                      {{ order.total | currency: "COP" : "symbol" : "1.0-0" }}
                     </p>
                   </div>
                   <div class="flex items-center space-x-4">
@@ -397,7 +398,7 @@ import { Pizza } from "../../models/pizza.model";
                 Ingresos Totales
               </h3>
               <p class="text-3xl font-bold text-blue-600">
-                ₹{{ getTotalRevenue() }}
+                {{ getTotalRevenue() | currency: "COP" : "symbol" : "1.0-0" }}
               </p>
             </div>
           </div>

@@ -68,7 +68,9 @@ import { Order } from "../../models/pizza.model";
 
             <div class="flex justify-between">
               <span class="text-gray-400">Total:</span>
-              <span class="text-white font-bold">₹{{ order()!.total }}</span>
+              <span class="text-white font-bold">{{
+                order()!.total | currency: "COP" : "symbol" : "1.0-0"
+              }}</span>
             </div>
 
             <div class="flex justify-between">

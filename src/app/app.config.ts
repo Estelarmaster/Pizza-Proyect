@@ -2,6 +2,7 @@ import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
   provideZoneChangeDetection,
+  LOCALE_ID,
 } from "@angular/core";
 import { provideRouter, withHashLocation } from "@angular/router";
 
@@ -12,5 +13,6 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withHashLocation()),
+    { provide: LOCALE_ID, useValue: "es-CO" },
   ],
 };
